@@ -1,0 +1,82 @@
+\documentclass[aspectratio=169,dvipsnames]{beamer}
+\usetheme{SimpleDarkBlue}
+\usepackage{tikz}
+\usepackage{minted}
+\usepackage[polish]{babel}
+\title{Drzewa czwórkowe i kd-drzewa}
+\date{\today}
+\author{Michał Dobranowski \and Wiktor Perczak}
+
+\begin{document}
+\maketitle
+
+\begin{frame}{Plan prezentacji}
+    \tableofcontents
+\end{frame}
+
+\section{Przedstawienie problemu}
+
+\begin{frame}{Przedstawienie problemu}
+    \begin{columns}
+
+    \column{0.6\textwidth}
+    Dany jest zbiór $n$ punktów $P$ na płaszczyźnie. Chcemy odpowiadać na zapytania typu:
+    \onslide<2->
+    \begin{center}
+        \textit{dla zadanych $x_1, x_2, y_1, y_2$ znaleźć punkty $p \in P$ takie, że $x_1 \leq x_p \leq x_2, y_1 \leq y_p \leq y_2$}.
+    \end{center}
+
+    \column{0.4\textwidth}
+    \centering
+    \begin{tikzpicture}
+        \pgfmathsetseed{1}
+        \onslide<1->
+        \foreach \i in {1,...,40} {
+            \pgfmathsetmacro\x{rand * 2}
+            \pgfmathsetmacro\y{rand * 2}
+            \coordinate (P\i) at (\x,\y);
+            \fill (P\i) circle (2pt);
+        }
+
+        \onslide<2->
+        \draw [fill=Fuchsia, opacity=0.3] (-0.3,-1.1) rectangle (2.1,1);
+        \fill [color=Fuchsia] (-0.3,-1.1) circle (2pt);
+        \fill [color=Fuchsia] (2.1,1) circle (2pt);
+    \end{tikzpicture}
+
+    \end{columns}
+\end{frame}
+
+\section{Rozwiązanie trywialne}
+
+\begin{frame}[fragile]{Rozwiązanie trywialne}
+    Sprawdzić każdy punkt. Złożoność czasowa zapytania: $\mathcal{O}(n)$.
+
+    \pause
+    \hspace*{\fill}
+    \begin{minted}[breaklines]{python}
+filter(lambda p: x_1 <= p[0] <= x_2 and y_1 <= p[1] <= y_2, points)
+    \end{minted}
+    \hspace*{\fill}
+\end{frame}
+
+\section{Drzewa czwórkowe}
+
+\begin{frame}{Drzewa czwórkowe -- opis struktury}
+    Drzewo czwórkowe (ang. \textit{quadtree}) do drzewiastą struktura danych, w której:
+    \begin{enumerate}
+        \item<2-> każdy wierzchołek odpowiada za pewnien prostokąt na płaszczyźnie,
+        \item<3-> każdy wierzchołek posiada maksymalnie czworo dzieci, z których każdy odpowiada za ćwiartkę prostokątu rodzica,
+        \item<4-> każdy liść odpowiada za jeden punkt na płaszczyźnie.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Drzewa czwórkowe -- sposób podziału}
+    \input{quadtree_construction.tex}
+\end{frame}
+
+\section{kd-drzewa}
+
+\section{Porównanie}
+
+\end{document}
