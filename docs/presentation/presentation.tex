@@ -83,16 +83,21 @@ filter(lambda p: x_1 <= p[0] <= x_2 and y_1 <= p[1] <= y_2, points)
 
 \begin{frame}{Drzewa czwórkowe -- analiza złożoności}
     \begin{lemma}[wysokość drzewa czwórkowego]
-        Niech wszystkie punkty ze zbioru $P$ będą zawarte w kwadracie o boku $1$. Przez $\phi$ oznaczymy najmniejszą odległość między pewnymi dwoma punktami. Wysokość $h$ drzewa czwórkowego dla zbioru $P$ jest rzędu $\sO(\log \phi^{-1})$.
-
-        \pause Można zauważyć, że $h$ jest $\Omega(\log n)$ (ograniczona asymptotycznie od dołu; jeśli punkty w $P$ są rozłożone w równomierną siatkę, to $h \in \Theta(\log n)$).
+        Niech
+        \[ \beta = \frac{\max_{p, q\in P} \Vert p-q\Vert}{\min_{p, q\in P, p \neq q} \Vert p-q\Vert}. \]
+        Wysokość $h$ drzewa czwórkowego dla zbioru $P$ jest $\Theta(\log\beta)$.
     \end{lemma}
 
+    \pause Warto zauważyć, że $h$ może być nieograniczone przez $n$. W praktyce jest ograniczone dzięki standardowi liczb zmiennoprzecinkowych.
+
+    Łatwo pokazać, że $h$ jest $\Omega(\log n)$ (a jeśli punkty w $P$ są rozłożone równomiernie, to $\Theta(\log n)$).
+
     \onslide<3->{
-        Złożoność czasowa
+        Złożoność
         \begin{enumerate}
         \item konstrukcji drzewa: \onslide<4->{$\sO(hn)$,}
-        \item zapytania: \onslide<5->{$\sO(hk)$.}
+        \item zapytania: \onslide<6->{$\sO(hk)$,}
+        \item pamięciowa: \onslide<5->{$\sO(hn)$.}
         \end{enumerate}
     }
 \end{frame}
