@@ -3,6 +3,10 @@
 \usepackage{tikz}
 \usepackage{minted}
 \usepackage[polish]{babel}
+\uselanguage{Polish}
+\languagepath{Polish}
+\newcommand{\sO}{\mathcal O}
+
 \title{Drzewa czwórkowe i kd-drzewa}
 \date{\today}
 \author{Michał Dobranowski \and Wiktor Perczak}
@@ -40,8 +44,8 @@
 
         \onslide<2->
         \draw [fill=Fuchsia, opacity=0.3] (-0.3,-1.1) rectangle (2.1,1);
-        \fill [color=Fuchsia] (-0.3,-1.1) circle (2pt);
-        \fill [color=Fuchsia] (2.1,1) circle (2pt);
+        \fill [color=Fuchsia] (-0.3,-1.1) circle (1.5pt);
+        \fill [color=Fuchsia] (2.1,1) circle (1.5pt);
     \end{tikzpicture}
 
     \end{columns}
@@ -50,7 +54,7 @@
 \section{Rozwiązanie trywialne}
 
 \begin{frame}[fragile]{Rozwiązanie trywialne}
-    Sprawdzić każdy punkt. Złożoność czasowa zapytania: $\mathcal{O}(n)$.
+    Sprawdzić każdy punkt. Złożoność czasowa zapytania: $\sO(n)$.
 
     \pause
     \hspace*{\fill}
@@ -58,6 +62,8 @@
 filter(lambda p: x_1 <= p[0] <= x_2 and y_1 <= p[1] <= y_2, points)
     \end{minted}
     \hspace*{\fill}
+
+    \pause Nie uda nam się poprawić złożoności czasowej, jeśli miałaby zależeć tylko od $n$. Chcemy więc, żeby zależała od liczby punktów wynikowych, którą oznaczymy przez $k$.
 \end{frame}
 
 \section{Drzewa czwórkowe}
@@ -75,7 +81,27 @@ filter(lambda p: x_1 <= p[0] <= x_2 and y_1 <= p[1] <= y_2, points)
     \input{quadtree_construction.tex}
 \end{frame}
 
+\begin{frame}{Drzewa czwórkowe -- analiza złożoności}
+    \begin{lemma}[wysokość drzewa czwórkowego]
+        Niech wszystkie punkty ze zbioru $P$ będą zawarte w kwadracie o boku $1$. Przez $\phi$ oznaczymy najmniejszą odległość między pewnymi dwoma punktami. Wysokość $h$ drzewa czwórkowego dla zbioru $P$ jest rzędu $\sO(\log \phi^{-1})$.
+
+        \pause Można zauważyć, że $h$ jest $\Omega(\log n)$ (ograniczona asymptotycznie od dołu; jeśli punkty w $P$ są rozłożone w równomierną siatkę, to $h \in \Theta(\log n)$).
+    \end{lemma}
+
+    \onslide<3->{
+        Złożoność czasowa
+        \begin{enumerate}
+        \item konstrukcji drzewa: \onslide<4->{$\sO(hn)$,}
+        \item zapytania: \onslide<5->{$\sO(hk)$.}
+        \end{enumerate}
+    }
+\end{frame}
+
 \section{kd-drzewa}
+
+\begin{frame}{kd-drzewa}
+    
+\end{frame}
 
 \section{Porównanie}
 
