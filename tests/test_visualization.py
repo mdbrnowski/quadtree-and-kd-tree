@@ -1,6 +1,6 @@
 import unittest
 from geometry import Rectangle
-from visualization import QuadtreeVisualization
+from quadtree_visualization import QuadtreeVisualization
 
 
 class QuadtreeVisualizationTest(unittest.TestCase):
