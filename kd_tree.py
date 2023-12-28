@@ -9,7 +9,7 @@ K = 2
 Point = tuple(float() for _ in range(K))
 
 class Node:
-    def __init__(self, dim : int, line : float, rectangle : Rectangle):
+    def __init__(self, dim: int, line: float, rectangle: Rectangle):
         self.dim = dim
         self.line = line
         self.rectangle = rectangle
@@ -38,7 +38,7 @@ class KdTree(Tree):
         )
         self.root = self.build_tree(self.sorted_points, 0, rectangle)
 
-    def build_tree(self, points: list[list[Point]], depth: int, rectangle : Rectangle):
+    def build_tree(self, points: list[list[Point]], depth: int, rectangle: Rectangle):
         if len(points[depth % K]) == 1:
             node = Node(None, None, rectangle)
             node.leaf_point = points[depth % K][0]
@@ -83,7 +83,7 @@ class KdTree(Tree):
 
         return v
 
-    def __find(self, node : Node, rectangle : Rectangle, res : list[Point]):
+    def __find(self, node: Node, rectangle: Rectangle, res: list[Point]):
         if rectangle & node.rectangle is None:
             return
         if len(node.leafs) == 0:
