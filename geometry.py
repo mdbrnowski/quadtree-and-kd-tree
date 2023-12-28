@@ -17,7 +17,7 @@ class Rectangle:
 
     def __eq__(self, other: Rectangle) -> bool:
         if not isinstance(other, Rectangle):
-            raise False
+            return False
         return self.get_extrema() == other.get_extrema()
 
     def __and__(self, other: Rectangle) -> Rectangle | None:
