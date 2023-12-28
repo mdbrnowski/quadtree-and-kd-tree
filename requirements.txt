@@ -1,1 +1,2 @@
 numpy~=1.26.2
+bitalg @ git+https://github.com/aghbit/Algorytmy-Geometryczne
