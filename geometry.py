@@ -5,7 +5,7 @@ Point = tuple[float, float]
 
 class Rectangle:
     def __init__(self, min_x: float, max_x: float, min_y: float, max_y: float):
-        if min_x >= max_x or min_y >= max_y:
+        if min_x > max_x or min_y > max_y:
             raise ValueError('Incorrect rectangle extrema.')
         self.min_x = min_x
         self.max_x = max_x
@@ -27,7 +27,7 @@ class Rectangle:
         max_x = min(self.max_x, other.max_x)
         min_y = max(self.min_y, other.min_y)
         max_y = min(self.max_y, other.max_y)
-        if min_x < max_x and min_y < max_y:
+        if min_x <= max_x and min_y <= max_y:
             return Rectangle(min_x, max_x, min_y, max_y)
         else:
             return None
