@@ -3,12 +3,12 @@ name: Test (unittest)
 on:
   push:
     branches: [ "main" ]
+    paths-ignore:
+      - '**.tex'
+      - '**.md'
+      - '**.pdf'
   pull_request:
     branches: [ "main" ]
-  paths-ignore:
-    - '**.tex'
-    - '**.md'
-    - '**.pdf'
   workflow_dispatch:
 
 jobs:
