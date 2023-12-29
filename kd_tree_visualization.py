@@ -1,12 +1,20 @@
 from __future__ import annotations
 from bitalg.visualizer.main import Visualizer
 from operator import itemgetter
-from kd_tree import _Node, Point
+from kd_tree import _Node
 from geometry import Rectangle
 from tree import Tree
-from random import randint
+from quick_select import quick_select, Point
 
 K = 2
+
+
+def points_from_rectangle(rectangle: Rectangle) -> tuple[tuple[float, float],
+tuple[float, float],
+tuple[float, float],
+tuple[float, float]]:
+    min_x, max_x, min_y, max_y = rectangle.get_extrema()
+    return (min_x, min_y), (max_x, min_y), (max_x, max_y), (min_x, max_y)
 
 
 class KdTreeVis(Tree):
@@ -33,7 +41,7 @@ class KdTreeVis(Tree):
 
         p1 = []
         p2 = []
-        median_point = self.quick_select(points, 0, len(points) - 1, (len(points) - 1) // 2, depth % K)
+        median_point = quick_select(points, 0, len(points) - 1, (len(points) - 1) // 2, depth % K)
         median = median_point[depth % K]
 
         equal_counter = 0
@@ -74,37 +82,6 @@ class KdTreeVis(Tree):
 
         return v
 
-    def partition(self, points, l, r, depth) -> int:
-        pivot = points[r][depth % K]
-        i = l - 1
-        for j in range(l, r):
-            if points[j][depth % K] < pivot:
-                i += 1
-                points[j], points[i] = points[i], points[j]
-        i += 1
-        points[i], points[r] = points[r], points[i]
-        return i
-
-    def rand_partition(self, points, l, r, depth) -> int:
-        rand_num = randint(l, r)
-        points[rand_num], points[r] = points[r], points[rand_num]
-        return self.partition(points, l, r, depth)
-
-    def quick_select(self, points, l, r, k, depth) -> Point:
-        pivot = self.rand_partition(points, l, r, depth)
-        if pivot == k:
-            return points[pivot]
-        if pivot > k:
-            return self.quick_select(points, l, pivot - 1, k, depth)
-        return self.quick_select(points, pivot + 1, r, k, depth)
-
-    def points_from_rectangle(self, rectangle: Rectangle) -> tuple[tuple[float, float],
-    tuple[float, float],
-    tuple[float, float],
-    tuple[float, float]]:
-        min_x, max_x, min_y, max_y = rectangle.get_extrema()
-        return (min_x, min_y), (max_x, min_y), (max_x, max_y), (min_x, max_y)
-
     def __find(self, node: _Node, rectangle: Rectangle, res: list[Point]):
         if rectangle & node.rectangle is None:
             return
@@ -117,7 +94,7 @@ class KdTreeVis(Tree):
             self.__find(leaf_node, rectangle, res)
 
     def find(self, rectangle: Rectangle) -> list[Point]:
-        self.vis.add_polygon(self.points_from_rectangle(rectangle), alpha=0.5, color="red")
+        self.vis.add_polygon(points_from_rectangle(rectangle), alpha=0.5, color="red")
         res = []
         self.__find(self.root, rectangle, res)
         return res

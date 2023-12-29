@@ -2,10 +2,9 @@ from __future__ import annotations
 from operator import itemgetter
 from geometry import Rectangle
 from tree import Tree
-from random import randint
+from quick_select import quick_select, Point
 
 K = 2
-Point = tuple(float() for _ in range(K))
 
 
 class _Node:
@@ -43,7 +42,7 @@ class KdTree(Tree):
 
         p1 = []
         p2 = []
-        median_point = self.quick_select(points, 0, len(points) - 1, (len(points) - 1) // 2, depth % K)
+        median_point = quick_select(points, 0, len(points) - 1, (len(points) - 1) // 2, depth % K)
         median = median_point[depth % K]
 
         equal_counter = 0
@@ -81,30 +80,6 @@ class KdTree(Tree):
             v.leafs += vr.leafs
 
         return v
-
-    def partition(self, points, l, r, depth) -> int:
-        pivot = points[r][depth % K]
-        i = l - 1
-        for j in range(l, r):
-            if points[j][depth % K] < pivot:
-                i += 1
-                points[j], points[i] = points[i], points[j]
-        i += 1
-        points[i], points[r] = points[r], points[i]
-        return i
-
-    def rand_partition(self, points, l, r, depth) -> int:
-        rand_num = randint(l, r)
-        points[rand_num], points[r] = points[r], points[rand_num]
-        return self.partition(points, l, r, depth)
-
-    def quick_select(self, points, l, r, k, depth) -> Point:
-        pivot = self.rand_partition(points, l, r, depth)
-        if pivot == k:
-            return points[pivot]
-        if pivot > k:
-            return self.quick_select(points, l, pivot - 1, k, depth)
-        return self.quick_select(points, pivot + 1, r, k, depth)
 
     def __find(self, node: _Node, rectangle: Rectangle, res: list[Point]):
         if rectangle & node.rectangle is None:
