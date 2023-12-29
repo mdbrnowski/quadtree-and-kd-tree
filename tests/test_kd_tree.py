@@ -18,6 +18,12 @@ class TestKDTree(unittest.TestCase):
         rectangle = Rectangle(0, 0.2, 0.8, 1e18)
         self.assertEqual([(0, 1)], tree.find(rectangle))
 
+    def test_many_similar_coordinates(self):
+        points = [(0, 0), (0, 1), (0, 2), (0, 3), (0, 4)]
+        tree = KdTree(points)
+        rectangle = Rectangle(-1, 1, 0, 0.5)
+        self.assertEqual([(0, 0)], tree.find(rectangle))
+
     def test_find_random_small_rect(self):
         points = list(zip(uniform(-1, 1, 5000),
                           uniform(-1, 1, 5000)))
