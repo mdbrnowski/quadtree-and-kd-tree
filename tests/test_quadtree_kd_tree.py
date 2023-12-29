@@ -5,7 +5,7 @@ from geometry import Rectangle
 from kd_tree import KdTree
 
 
-class QuadtreeAndKdTreeTest(unittest.TestCase):
+class QuadtreeKdTreeTest(unittest.TestCase):
     def test_construction(self):
         points = [(0, 0), (0, 1), (1, 1), (1, 0)]
         try:
