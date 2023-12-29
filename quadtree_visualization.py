@@ -46,4 +46,3 @@ class QuadtreeVisualization(Quadtree):
                 for child in node.children:
                     q.append((child, level + 1))
         self.add_rectangles(nodes)
-        

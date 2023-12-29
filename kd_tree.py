@@ -1,16 +1,15 @@
 from __future__ import annotations
 from operator import itemgetter
-from geometry import Rectangle
+from geometry import Rectangle, Point
 from tree import Tree
-from quick_select import quick_select, Point
+from quick_select import quick_select
 
 K = 2
 
 
 class _Node:
-    def __init__(self, dim: int | None, line: float | None, rectangle: Rectangle):
+    def __init__(self, dim: int | None, rectangle: Rectangle):
         self.dim = dim
-        self.line = line
         self.rectangle = rectangle
         self.left = None
         self.right = None
@@ -18,7 +17,7 @@ class _Node:
         self.leaf_point = None
 
     def __str__(self):
-        return f'Node({repr(self.dim)}, {self.line}, {self.leaf_point})'
+        return f'Node({repr(self.dim)}, {self.leaf_point})'
 
 
 class KdTree(Tree):
@@ -36,7 +35,7 @@ class KdTree(Tree):
 
     def build_tree(self, points: list[Point], depth: int, rectangle: Rectangle) -> _Node:
         if len(points) == 1:
-            node = _Node(None, None, rectangle)
+            node = _Node(None, rectangle)
             node.leaf_point = points[0]
             return node
 
@@ -66,7 +65,7 @@ class KdTree(Tree):
             vl = self.build_tree(p1, depth + 1, Rectangle(min_x, max_x, min_y, median))
             vr = self.build_tree(p2, depth + 1, Rectangle(min_x, max_x, median, max_y))
 
-        v = _Node(depth % K, median_point, rectangle)
+        v = _Node(depth % K, rectangle)
         v.left = vl
         v.right = vr
         if vl.leaf_point is not None:

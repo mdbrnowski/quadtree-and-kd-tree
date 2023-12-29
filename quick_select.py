@@ -1,7 +1,8 @@
 from random import randint
+from geometry import Point
 
 K = 2
-Point = tuple(float() for _ in range(K))
+
 
 def partition(points: list[Point], l: int, r: int, depth: int) -> int:
     pivot = points[r][depth % K]

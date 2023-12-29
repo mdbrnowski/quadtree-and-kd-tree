@@ -1,18 +1,15 @@
 from __future__ import annotations
-from bitalg.visualizer.main import Visualizer
 from operator import itemgetter
+from bitalg.visualizer.main import Visualizer
 from kd_tree import _Node
-from geometry import Rectangle
+from geometry import Rectangle, Point
 from tree import Tree
-from quick_select import quick_select, Point
+from quick_select import quick_select
 
 K = 2
 
 
-def points_from_rectangle(rectangle: Rectangle) -> tuple[tuple[float, float],
-tuple[float, float],
-tuple[float, float],
-tuple[float, float]]:
+def points_from_rectangle(rectangle: Rectangle) -> tuple[Point, Point, Point, Point]:
     min_x, max_x, min_y, max_y = rectangle.get_extrema()
     return (min_x, min_y), (max_x, min_y), (max_x, max_y), (min_x, max_y)
 
@@ -35,7 +32,7 @@ class KdTreeVis(Tree):
 
     def build_tree(self, points: list[Point], depth: int, rectangle: Rectangle) -> _Node:
         if len(points) == 1:
-            node = _Node(None, None, rectangle)
+            node = _Node(None, rectangle)
             node.leaf_point = points[0]
             return node
 
@@ -67,7 +64,7 @@ class KdTreeVis(Tree):
             vl = self.build_tree(p1, depth + 1, Rectangle(min_x, max_x, min_y, median))
             vr = self.build_tree(p2, depth + 1, Rectangle(min_x, max_x, median, max_y))
 
-        v = _Node(depth % K, median_point, rectangle)
+        v = _Node(depth % K, rectangle)
         v.left = vl
         v.right = vr
         if vl.leaf_point is not None:
