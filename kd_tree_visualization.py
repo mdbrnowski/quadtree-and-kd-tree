@@ -4,6 +4,7 @@ from operator import itemgetter
 from kd_tree import _Node, Point
 from geometry import Rectangle
 from tree import Tree
+from random import randint
 
 K = 2
 
@@ -11,10 +12,6 @@ K = 2
 class KdTreeVis(Tree):
     def __init__(self, points: list[Point]):
         super().__init__(points)
-
-        self.sorted_points = []
-        for i in range(K):
-            self.sorted_points.append(sorted(self.points, key=itemgetter(i)))
 
         self.max_rectangle = Rectangle(
             min(points, key=itemgetter(0))[0],
@@ -26,49 +23,43 @@ class KdTreeVis(Tree):
         self.vis = Visualizer()
         self.vis.add_point(self.points, s=10, color="black")
 
-        self.root = self.build_tree(self.sorted_points, 0, self.max_rectangle)
+        self.root = self.build_tree(self.points, 0, self.max_rectangle)
 
-    def build_tree(self, points: list[list[Point]], depth: int, rectangle: Rectangle) -> _Node:
-        if len(points[depth % K]) == 1:
+    def build_tree(self, points: list[Point], depth: int, rectangle: Rectangle) -> _Node:
+        if len(points) == 1:
             node = _Node(None, None, rectangle)
-            node.leaf_point = points[depth % K][0]
+            node.leaf_point = points[0]
             return node
 
-        p1 = [[] for _ in range(K)]
-        p2 = [[] for _ in range(K)]
+        p1 = []
+        p2 = []
+        median_point = self.quick_select(points, 0, len(points) - 1, (len(points) - 1) // 2, depth % K)
+        median = median_point[depth % K]
 
-        median_id = (len(points[depth % K]) - 1) // 2
-        median = points[depth % K][median_id][depth % K]
-        if len(points[depth % K]) % 2 == 0:
-            median = (median + points[depth % K][median_id + 1][depth % K]) / 2
-
-        for i in range(K):
-            for point in points[i]:
-                if point[depth % K] < median:
-                    p1[i].append(point)
-                elif point[depth % K] > median:
-                    p2[i].append(point)
+        equal_counter = 0
+        for point in points:
+            if point[depth % K] < median:
+                p1.append(point)
+            elif point[depth % K] > median:
+                p2.append(point)
+            else:
+                if equal_counter % 2 == 0:
+                    p1.append(point)
                 else:
-                    if depth % 2 == 0:
-                        p1[i].append(point)
-                    else:
-                        p2[i].append(point)
+                    p2.append(point)
+                equal_counter += 1
 
         min_x, max_x, min_y, max_y = rectangle.get_extrema()
         if depth % K == 0:
-            val = points[depth % K][median_id][0]
-            self.vis.add_line_segment(((val, min_y), (val, max_y)))
-
-            vl = self.build_tree(p1, depth + 1, Rectangle(min_x, val, min_y, max_y))
-            vr = self.build_tree(p2, depth + 1, Rectangle(val, max_x, min_y, max_y))
+            self.vis.add_line_segment(((median, min_y), (median, max_y)))
+            vl = self.build_tree(p1, depth + 1, Rectangle(min_x, median, min_y, max_y))
+            vr = self.build_tree(p2, depth + 1, Rectangle(median, max_x, min_y, max_y))
         else:
-            val = points[depth % K][median_id][1]
-            self.vis.add_line_segment(((min_x, val), (max_x, val)))
+            self.vis.add_line_segment(((min_x, median), (max_x, median)))
+            vl = self.build_tree(p1, depth + 1, Rectangle(min_x, max_x, min_y, median))
+            vr = self.build_tree(p2, depth + 1, Rectangle(min_x, max_x, median, max_y))
 
-            vl = self.build_tree(p1, depth + 1, Rectangle(min_x, max_x, min_y, val))
-            vr = self.build_tree(p2, depth + 1, Rectangle(min_x, max_x, val, max_y))
-
-        v = _Node(depth % K, points[depth % K][median_id], rectangle)
+        v = _Node(depth % K, median_point, rectangle)
         v.left = vl
         v.right = vr
         if vl.leaf_point is not None:
@@ -82,6 +73,30 @@ class KdTreeVis(Tree):
             v.leafs += vr.leafs
 
         return v
+
+    def partition(self, points, l, r, depth) -> int:
+        pivot = points[r][depth % K]
+        i = l - 1
+        for j in range(l, r):
+            if points[j][depth % K] < pivot:
+                i += 1
+                points[j], points[i] = points[i], points[j]
+        i += 1
+        points[i], points[r] = points[r], points[i]
+        return i
+
+    def rand_partition(self, points, l, r, depth) -> int:
+        rand_num = randint(l, r)
+        points[rand_num], points[r] = points[r], points[rand_num]
+        return self.partition(points, l, r, depth)
+
+    def quick_select(self, points, l, r, k, depth) -> Point:
+        pivot = self.rand_partition(points, l, r, depth)
+        if pivot == k:
+            return points[pivot]
+        if pivot > k:
+            return self.quick_select(points, l, pivot - 1, k, depth)
+        return self.quick_select(points, pivot + 1, r, k, depth)
 
     def points_from_rectangle(self, rectangle: Rectangle) -> tuple[tuple[float, float],
     tuple[float, float],
@@ -106,3 +121,9 @@ class KdTreeVis(Tree):
         res = []
         self.__find(self.root, rectangle, res)
         return res
+
+    def tree_print(self, node):
+        if node is not None:
+            print(node)
+            self.tree_print(node.left)
+            self.tree_print(node.right)
