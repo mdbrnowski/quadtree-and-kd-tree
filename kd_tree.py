@@ -82,7 +82,7 @@ class KdTree(Tree):
 
         return v
 
-    def partition(self, points, l, r, depth):
+    def partition(self, points, l, r, depth) -> int:
         pivot = points[r][depth % K]
         i = l - 1
         for j in range(l, r):
@@ -93,12 +93,12 @@ class KdTree(Tree):
         points[i], points[r] = points[r], points[i]
         return i
 
-    def rand_partition(self, points, l, r, depth):
+    def rand_partition(self, points, l, r, depth) -> int:
         rand_num = randint(l, r)
         points[rand_num], points[r] = points[r], points[rand_num]
         return self.partition(points, l, r, depth)
 
-    def quick_select(self, points, l, r, k, depth):
+    def quick_select(self, points, l, r, k, depth) -> Point:
         pivot = self.rand_partition(points, l, r, depth)
         if pivot == k:
             return points[pivot]
