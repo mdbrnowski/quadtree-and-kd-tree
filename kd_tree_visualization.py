@@ -9,11 +9,6 @@ from quick_select import quick_select
 K = 2
 
 
-def points_from_rectangle(rectangle: Rectangle) -> tuple[Point, Point, Point, Point]:
-    min_x, max_x, min_y, max_y = rectangle.get_extrema()
-    return (min_x, min_y), (max_x, min_y), (max_x, max_y), (min_x, max_y)
-
-
 class KdTreeVis(Tree):
     def __init__(self, points: list[Point]):
         super().__init__(points)
@@ -26,7 +21,7 @@ class KdTreeVis(Tree):
         )
 
         self.vis = Visualizer()
-        self.vis.add_point(self.points, s=10, color="black")
+        self.vis.add_point(points, color='black', s=10)
 
         self.root = self.build_tree(self.points, 0, self.max_rectangle)
 
@@ -56,11 +51,11 @@ class KdTreeVis(Tree):
 
         min_x, max_x, min_y, max_y = rectangle.get_extrema()
         if depth % K == 0:
-            self.vis.add_line_segment(((median, min_y), (median, max_y)))
+            self.vis.add_line_segment(((median, min_y), (median, max_y)), color='black')
             vl = self.build_tree(p1, depth + 1, Rectangle(min_x, median, min_y, max_y))
             vr = self.build_tree(p2, depth + 1, Rectangle(median, max_x, min_y, max_y))
         else:
-            self.vis.add_line_segment(((min_x, median), (max_x, median)))
+            self.vis.add_line_segment(((min_x, median), (max_x, median)), color='black')
             vl = self.build_tree(p1, depth + 1, Rectangle(min_x, max_x, min_y, median))
             vr = self.build_tree(p2, depth + 1, Rectangle(min_x, max_x, median, max_y))
 
@@ -85,13 +80,15 @@ class KdTreeVis(Tree):
         if len(node.leafs) == 0:
             if node.leaf_point is not None and node.leaf_point in rectangle:
                 res.append(node.leaf_point)
-                self.vis.add_point(node.leaf_point, s=10, color="red")
+                self.vis.add_point(node.leaf_point, s=15, color='red')
             return
         for leaf_node in node.leafs:
             self.__find(leaf_node, rectangle, res)
 
     def find(self, rectangle: Rectangle) -> list[Point]:
-        self.vis.add_polygon(points_from_rectangle(rectangle), alpha=0.5, color="red")
+        self.vis.add_polygon([(rectangle.min_x, rectangle.min_y), (rectangle.max_x, rectangle.min_y),
+                              (rectangle.max_x, rectangle.max_y), (rectangle.min_x, rectangle.max_y)],
+                             color='red', alpha=0.3)
         res = []
         self.__find(self.root, rectangle, res)
         return res
