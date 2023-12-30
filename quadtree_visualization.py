@@ -5,7 +5,7 @@ from quadtree import Quadtree, _Node
 from geometry import Point, Rectangle
 
 
-class QuadtreeVisualization(Quadtree):
+class QuadtreeVis(Quadtree):
     def __init__(self, points: list[Point]):
         super().__init__(points)
         self.vis = Visualizer()
