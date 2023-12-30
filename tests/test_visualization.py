@@ -1,6 +1,6 @@
 import unittest
 from geometry import Rectangle
-from quadtree_visualization import QuadtreeVisualization
+from quadtree_visualization import QuadtreeVis
 from kd_tree_visualization import KdTreeVis
 
 
@@ -9,7 +9,7 @@ class QuadtreeKdTreeVisualizationTest(unittest.TestCase):
         points = [(0, 0), (0, 1), (1, 1), (1, 0)]
         rectangle = Rectangle(0, 0.2, 0.8, 1)
         try:
-            tree = QuadtreeVisualization(points)
+            tree = QuadtreeVis(points)
             tree.add_grid()
             tree.find(rectangle)
         except Exception as e:
