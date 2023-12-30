@@ -24,24 +24,27 @@ def get_big_rectangle():
     return Rectangle(x, x + 1000, y, y + 1000)
 
 
-def print_table(df):
+def print_table(df, filename):
     for n in sorted(list(set(df.n))):
         quad_time = df[(df.n == n) & (df.type == 'quad')].time.mean()
         kd_time = df[(df.n == n) & (df.type == 'kd')].time.mean()
         print(f'{n} & {quad_time:.4f} & {kd_time:.4f} \\\\')
 
-    sns.lineplot(data=df, x='n', y='time', hue='type', errorbar=('se', 1))
-    plt.show()
+    sns.lineplot(data=df, x='n', y='time', hue='type', errorbar='se')
+    plt.ylabel('czas [s]')
+    plt.legend(title='typ drzewa')
+    plt.savefig(f'docs/documentation/imgs/{filename}.pdf')
+    plt.clf()
 
 
-def calculate(distribution, ns):
+def calculate(distribution, ns, filename_prefix):
     construction_times = []
     small_find_times = []
     big_find_times = []
 
     for n in ns:
         print(n)
-        for _ in range(10):
+        for _ in range(15):
             points = distribution(n)
             small_rectangle = get_small_rectangle()  # 1/100
             big_rectangle = get_big_rectangle()  # 1/4
@@ -73,9 +76,9 @@ def calculate(distribution, ns):
     small_find_times = pd.DataFrame(small_find_times, columns=['n', 'type', 'time'])
     big_find_times = pd.DataFrame(big_find_times, columns=['n', 'type', 'time'])
 
-    print_table(construction_times)
-    print_table(small_find_times)
-    print_table(big_find_times)
+    print_table(construction_times, filename_prefix + '_construction_time')
+    print_table(small_find_times, filename_prefix + '_find_small_time')
+    print_table(big_find_times, filename_prefix + '_find_big_time')
 
 
 def uniformly_distributed_points(n):
@@ -88,9 +91,9 @@ def pair_of_points(n):
         x = np.random.uniform(-1000, 1000)
         y = np.random.uniform(-1000, 1000)
         points.append((x, y))
-        points.append((x + 1e-10, y))
+        points.append((x + 1e-8, y))
     return points
 
 
-calculate(uniformly_distributed_points, (10_000, 25_000, 50_000, 75_000, 100_000))
-calculate(pair_of_points, (10_000, 25_000, 50_000, 75_000, 100_000))
+calculate(uniformly_distributed_points, (10_000, 20_000, 30_000, 40_000, 50_000), 'uniform')
+calculate(pair_of_points, (1000, 1500, 2000, 2500, 3000), 'pairs')
