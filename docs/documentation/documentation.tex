@@ -1,0 +1,28 @@
+\documentclass[11pt]{scrartcl}
+\usepackage{minted}
+\setminted{breaklines}
+\usemintedstyle{tango}
+\usepackage[polish]{babel}
+
+\title{Dokumentacja}
+\author{Michał Dobranowski \and Wiktor Perczak}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Sekcja pierwsza}
+
+\section*{Sekcja druga ale bez numeracji}
+
+Kod w środku linii, np. w \texttt{Pythonie}.
+
+\begin{minted}{python}
+# a tutaj dłuższy kawałek kodu, jakby ktoś chciał
+def function(x: int) -> int:
+    return 42023453453452345342345623452345345345345345234 + 54235345342349583459238745983459384598
+\end{minted}
+
+Loremm ipsum dolor sit amet.
+
+\end{document}
