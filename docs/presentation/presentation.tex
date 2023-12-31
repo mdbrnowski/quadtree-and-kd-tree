@@ -102,7 +102,7 @@ filter(lambda p: x_1 <= p[0] <= x_2 and y_1 <= p[1] <= y_2, points)
     }
 \end{frame}
 
-\section{kd-drzewa}
+\section{Kd-drzewa}
 
 \begin{frame}{kd-tree -- opis struktury}
     Kd-drzewo (ang. \textit{kd-tree}) to drzewo binarne, w którym:
@@ -227,8 +227,8 @@ filter(lambda p: x_1 <= p[0] <= x_2 and y_1 <= p[1] <= y_2, points)
 \begin{frame}{kd-tree -- odpowiadanie na zapytania}
     Znajdowanie punktów, które należą do zadanego obszaru działa następująco:
     \begin{enumerate}
-        \item<2-> każdy wierzchołek na drzewie (poza liśćmi) odpowiada za konkretny obszar w przestrzeni,
-        \item<3-> przeszukuje się drzewo od korzenia, i jeśli obszar z wierzchołka wpełni znajduje się w zadanym obszarze, to uwzględniamy wszystkie jego liście w odpowiedzi,
+        \item<2-> każdy wierzchołek w drzewie (poza liśćmi) odpowiada za konkretny obszar w przestrzeni,
+        \item<3-> przeszukuje się drzewo od korzenia -- jeśli obszar z wierzchołka w pełni znajduje się w zadanym obszarze, to uwzględniamy wszystkie jego liście w odpowiedzi,
         \item<4-> jeśli obszar tylko częściowo pokrywa się z zadanym obszarem, to sprawdzamy dalej jego dzieci,
         \item<5-> jesli obszar w ogóle nie pokrywa się z zadanym obszarem to kończymy przeszukiwanie w tym poddrzewie.
     \end{enumerate}
@@ -245,19 +245,20 @@ filter(lambda p: x_1 <= p[0] <= x_2 and y_1 <= p[1] <= y_2, points)
 
 
 \begin{frame}{kd-tree -- analiza złożoności}
-    Budując drzewo trzeba w każdym kroku liczyć medianę, co odbywa się w czasie $\sO(n)$.
+    Budując drzewo, trzeba w każdym kroku liczyć medianę, co odbywa się w czasie $\sO(n)$.
     Drzewo jest zrównoważone, więc z każdym podziałem zbiór zmniejsza się dwukrotnie,
     więc ostateczna złożoność wynosi $\sO(n \log n)$.
 
+    \pause
     \begin{lemma}[o kd-drzewie]
         Dla zrównoważonego kd-drzewa o zamiennym podziale (czyli takim, gdzie punkt dzielący jest wybierany według różnych wymiarów dla różnych poziomów drzewa), dowolna pionowa lub pozioma prosta przecina $\sO(\sqrt n)$ komórek.
     \end{lemma}
 
     Złożoność
     \begin{enumerate}
-    \item konstrukcji drzewa: $\sO(n\log n)$,
-    \item zapytania: $\sO(\sqrt n)$,
-    \item pamięciowa: $\sO(n)$.
+        \item konstrukcji drzewa: $\sO(n\log n)$,
+        \item zapytania: $\sO(\sqrt n)$,
+        \item pamięciowa: $\sO(n)$.
     \end{enumerate}
 \end{frame}
 
