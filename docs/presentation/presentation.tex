@@ -102,10 +102,164 @@ filter(lambda p: x_1 <= p[0] <= x_2 and y_1 <= p[1] <= y_2, points)
     }
 \end{frame}
 
-\section{kd-drzewa}
+\section{Kd-drzewa}
 
-\begin{frame}{kd-drzewa}
-    
+\begin{frame}{kd-tree -- opis struktury}
+    Kd-drzewo (ang. \textit{kd-tree}) to drzewo binarne, w którym:
+    \begin{enumerate}
+        \item<2-> każdy poziom drzewa odpowiada za wymiar, względem którego dzieli się punkty,
+        \item<3-> każdy wierzchołek odpowiada za wartość współrzędnej podziału w danym wymiarze,
+        \item<4-> wartość współrzędnej podziału jest przyjmowana jako mediana zbioru (znajdowana za pomocą algorytmu quickselect),
+        \item<5-> dla każdego wierzchołka obiekty mniejsze trafiają do lewego potomka, większe do prawego, a równe albo do lewego albo do prawego (dla zrównoważenia drzewa),
+        \item<6-> każdy liść odpowiada za jeden punkt na płaszczyźnie.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{kd-drzewa -- sposób podziału}
+    \begin{columns}
+        \column{0.5\textwidth}
+        \includegraphics[width=\textwidth]{images/plots/1}
+        \column{0.5\textwidth}
+        \includegraphics[width=\textwidth]{images/trees/1.drawio}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{kd-drzewa -- sposób podziału}
+    \begin{columns}
+        \column{0.5\textwidth}
+        \includegraphics[width=\textwidth]{images/plots/2}
+        \column{0.5\textwidth}
+        \includegraphics[width=\textwidth]{images/trees/2.drawio}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{kd-drzewa -- sposób podziału}
+    \begin{columns}
+        \column{0.5\textwidth}
+        \includegraphics[width=\textwidth]{images/plots/3}
+        \column{0.5\textwidth}
+        \includegraphics[width=\textwidth]{images/trees/3.drawio}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{kd-drzewa -- sposób podziału}
+    \begin{columns}
+        \column{0.5\textwidth}
+        \includegraphics[width=\textwidth]{images/plots/4}
+        \column{0.5\textwidth}
+        \includegraphics[width=\textwidth]{images/trees/4.drawio}
+    \end{columns}
+\end{frame}
+
+
+\begin{frame}{kd-drzewa -- sposób podziału}
+    \begin{columns}
+        \column{0.5\textwidth}
+        \includegraphics[width=\textwidth]{images/plots/4}
+        \column{0.5\textwidth}
+        \includegraphics[width=\textwidth]{images/trees/5.drawio}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{kd-drzewa -- sposób podziału}
+    \begin{columns}
+        \column{0.5\textwidth}
+        \includegraphics[width=\textwidth]{images/plots/5}
+        \column{0.5\textwidth}
+        \includegraphics[width=\textwidth]{images/trees/6.drawio}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{kd-drzewa -- sposób podziału}
+    \begin{columns}
+        \column{0.5\textwidth}
+        \includegraphics[width=\textwidth]{images/plots/5}
+        \column{0.5\textwidth}
+        \includegraphics[width=\textwidth]{images/trees/7.drawio}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{kd-drzewa -- sposób podziału}
+    \begin{columns}
+        \column{0.5\textwidth}
+        \includegraphics[width=\textwidth]{images/plots/6}
+        \column{0.5\textwidth}
+        \includegraphics[width=\textwidth]{images/trees/8.drawio}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{kd-drzewa -- sposób podziału}
+    \begin{columns}
+        \column{0.5\textwidth}
+        \includegraphics[width=\textwidth]{images/plots/7}
+        \column{0.5\textwidth}
+        \includegraphics[width=\textwidth]{images/trees/9.drawio}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{kd-drzewa -- sposób podziału}
+    \begin{columns}
+        \column{0.5\textwidth}
+        \includegraphics[width=\textwidth]{images/plots/7}
+        \column{0.5\textwidth}
+        \includegraphics[width=\textwidth]{images/trees/10.drawio}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{kd-drzewa -- sposób podziału}
+    \begin{columns}
+        \column{0.5\textwidth}
+        \includegraphics[width=\textwidth]{images/plots/8}
+        \column{0.5\textwidth}
+        \includegraphics[width=\textwidth]{images/trees/11.drawio}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{kd-drzewa -- sposób podziału}
+    \begin{columns}
+        \column{0.5\textwidth}
+        \includegraphics[width=\textwidth]{images/plots/8}
+        \column{0.5\textwidth}
+        \includegraphics[width=\textwidth]{images/trees/12.drawio}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{kd-tree -- odpowiadanie na zapytania}
+    Znajdowanie punktów, które należą do zadanego obszaru działa następująco:
+    \begin{enumerate}
+        \item<2-> każdy wierzchołek w drzewie (poza liśćmi) odpowiada za konkretny obszar w przestrzeni,
+        \item<3-> przeszukuje się drzewo od korzenia -- jeśli obszar z wierzchołka w pełni znajduje się w zadanym obszarze, to uwzględniamy wszystkie jego liście w odpowiedzi,
+        \item<4-> jeśli obszar tylko częściowo pokrywa się z zadanym obszarem, to sprawdzamy dalej jego dzieci,
+        \item<5-> jesli obszar w ogóle nie pokrywa się z zadanym obszarem to kończymy przeszukiwanie w tym poddrzewie.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{kd-drzewa -- odpowiadanie na zapytania}
+    \begin{columns}
+        \column{0.5\textwidth}
+        \includegraphics[width=\textwidth]{images/plots/9}
+        \column{0.5\textwidth}
+        \includegraphics[width=\textwidth]{images/trees/12.drawio}
+    \end{columns}
+\end{frame}
+
+
+\begin{frame}{kd-tree -- analiza złożoności}
+    Budując drzewo, trzeba w każdym kroku liczyć medianę, co odbywa się w czasie $\sO(n)$.
+    Drzewo jest zrównoważone, więc z każdym podziałem zbiór zmniejsza się dwukrotnie,
+    więc ostateczna złożoność wynosi $\sO(n \log n)$.
+
+    \pause
+    \begin{lemma}[o kd-drzewie]
+        Dla zrównoważonego kd-drzewa o zamiennym podziale (czyli takim, gdzie punkt dzielący jest wybierany według różnych wymiarów dla różnych poziomów drzewa), dowolna pionowa lub pozioma prosta przecina $\sO(\sqrt n)$ komórek.
+    \end{lemma}
+
+    Złożoność
+    \begin{enumerate}
+        \item konstrukcji drzewa: $\sO(n\log n)$,
+        \item zapytania: $\sO(\sqrt n)$,
+        \item pamięciowa: $\sO(n)$.
+    \end{enumerate}
 \end{frame}
 
 \section{Porównanie}
