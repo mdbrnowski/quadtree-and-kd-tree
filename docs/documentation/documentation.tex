@@ -67,9 +67,9 @@ Klasa \texttt{Quadtree} umożliwia budowanie drzewa czwórkowego oraz odpowiadan
     \item \texttt{def \_\_init\_\_(self, points: list[Point])} -- tworzy pierwszy (największy) prostokąt, który zostaje zapisany w korzeniu drzewa (\texttt{self.root}). Nastepnie wywołuje z korzenia metodę \texttt{\_\_construct\_subtree}, która konstruuje drzewo czwórkowe.
     \item \texttt{ \_\_construct\_subtree(self, node: \_Node, points: list[Point])} -- konstruuje drzewo czwórkowe, dzieląc kolejne prostokąty na cztery ćwiartki oraz rozdzielając odpowiednio punkty na cztery zbiory. Jeżeli dojdzie do prostokąta, wewnątrz którego jest tylko jeden punkt, to obecnie rozważany wierzchołek (\texttt{\_Node}) staje się liściem drzewa.
 
-    Złożoność: $\sO(hn)$, gdzie $h$ to wysokość drzewa czwórkowego. Dzięki standardowi liczb zmiennoprzecinkowych jest ograniczone przez $\Omega(\log n)$ (a jeśli punkty w $P$ są rozłożone równomiernie, to $\Theta(\log n)$).
+    Złożoność: $\sO(hn)$, gdzie $h$ to wysokość drzewa czwórkowego.
     \item  \texttt{def \_\_find(self, node: \_Node, rectangle: Rectangle, res: list[Point])} -- metoda, która służy do znajdywania punktów wewnątrz zadanego prostokąta. Rekurencyjnie znajduje prostokąty, które w pełni zawierają się w prostokącie z zapytania i dodaje liście poniżej do odpowiedzi.
-    \item \texttt{def find(self, rectangle: Rectangle) -> list[Point]} -- wywołuje metodę \texttt{\_\_find()} i zwraca listę punktów, które mieszczą się w zadanym prostokącie. Złożoność: $\sO(hn)$.
+    \item \texttt{def find(self, rectangle: Rectangle) -> list[Point]} -- wywołuje metodę \texttt{\_\_find()} i zwraca listę punktów, które mieszczą się w zadanym prostokącie. Złożoność: $\sO(hk)$, gdzie $k$ to liczba znalezionych punktów.
 \end{itemize}
 
 \newpage
@@ -137,7 +137,7 @@ print(tree.find(rectangle))
 \end{minted}
 
 \section{Wizualizacja}
-Do wizualizacji wykorzystano narzędzie koła naukowego BIT (instrukcja jak je pobrać: \url{https://github.com/aghbit/Algorytmy-Geometryczne}). Napisano dwie klasy \texttt{QuadtreeVis} oraz \texttt{KdTreeVis}, które umożliwiają:
+Do wizualizacji wykorzystano narzędzie koła naukowego BIT (\url{https://github.com/aghbit/Algorytmy-Geometryczne}). Napisano dwie klasy \texttt{QuadtreeVis} oraz \texttt{KdTreeVis}, które umożliwiają:
 \begin{itemize}
     \item podział przestrzeni na prostokąty
     \item zobrazowanie zbioru znalezionych punktów dla danego zapytania
@@ -212,12 +212,15 @@ kd_tree.vis.show()
 Aby wygenerować plik GIF do wyświetlania kolejnych kroków algorytmu, należy zamiast:
 \texttt{kd\_tree.vis.show()}, użyć \texttt{kd\_tree.vis.show\_gif()}.
 
-\section{Bibliografia}
-\begin{enumerate}
-    \item dr inż. Barbara Głut Wykład -- wyszukiwanie geometryczne.
-    \item Prof. Dr. Kevin Buchin wykłady: \href{https://ls11-www.cs.tu-dortmund.de/_media/buchin/teaching/akda_ws21/quadtrees.pdf?fbclid=IwAR0CkjolTINnIw6dn0KZMarFhTsdrilv7pp6BOP6ctCmB5_mKtQgUV3gApw}{Link do prezentacji o quadtree}.
-    \item Clifford Stein, Charles E. Leiserson, Ron Rivest i Thomas H. Cormen: ,,Wprowadzenie do algorytmów''.
+\section{Porównanie -- testy czasowe}
 
-\end{enumerate}
+
+\addcontentsline{toc}{section}{Literatura}
+\begin{thebibliography}{9}
+    \bibitem{ref:Głut} \textbf{Algorytmy geometryczne -- wykład}, dr inż Barbara Głut.
+    \bibitem{ref:Buchin} \textbf{Quadtrees, Geometric Approximation Algorithms}, prof. Kevin Buchin, TU Dortmund.
+        \url{https://ls11-www.cs.tu-dortmund.de/_media/buchin/teaching/akda_ws21/quadtrees.pdf}
+        \bibitem{ref:Cormen} \textbf{Wprowadzenie do algorytmów}, Thomas H. Cormen et al.
+\end{thebibliography}
 
 \end{document}
