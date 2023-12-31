@@ -1,4 +1,4 @@
-\documentclass[11pt]{scrartcl}
+\documentclass[12pt]{scrartcl}
 \usepackage{minted}
 \setminted{breaklines}
 \usemintedstyle{tango}
@@ -8,7 +8,12 @@
 \usepackage[colorlinks=true]{hyperref}
 \hypersetup{urlcolor=MidnightBlue,linkcolor=DarkOrchid,citecolor=ForestGreen}
 \usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\newcommand{\sA}{\mathcal A}
+\newcommand{\sB}{\mathcal B}
 \newcommand{\sO}{\mathcal O}
+\newcommand{\sS}{\mathcal S}
 
 \title{Dokumentacja}
 \author{Michał Dobranowski \and Wiktor Perczak}
@@ -17,11 +22,8 @@
 
 \begin{document}
 \maketitle
-
 \tableofcontents
-
 \newpage
-
 
 \section{Część techniczna}
 
@@ -31,7 +33,6 @@ Do używania programu potrzebny jest język \texttt{Python} w wersji co najmniej
     \item \texttt{numpy 1.26.2}
     \item \texttt {bitalg} napisany przez koło naukowe BIT do wizualizacji danych: \url{https://github.com/aghbit/Algorytmy-Geometryczne}
 \end{itemize}
-
 
 \subsection{Moduł \texttt{geometry}}
 
@@ -72,8 +73,6 @@ Klasa \texttt{Quadtree} umożliwia budowanie drzewa czwórkowego oraz odpowiadan
     \item \texttt{def find(self, rectangle: Rectangle) -> list[Point]} -- wywołuje metodę \texttt{\_\_find()} i zwraca listę punktów, które mieszczą się w zadanym prostokącie. Złożoność: $\sO(hk)$, gdzie $k$ to liczba znalezionych punktów.
 \end{itemize}
 
-\newpage
-
 \subsection{Moduł \texttt{kd\_tree}}
 
 \subsubsection{\texttt{\_Node}}
@@ -96,8 +95,6 @@ Klasa \texttt{KdTree} umożliwia budowanie drzewa oraz odpowiadanie na zapytania
     \item \texttt{def find(self, rectangle: Rectangle) -> list[Point]} -- wywołuje metodę \texttt{\_\_find()} i zwraca listę punktów, które mieszczą się w zadanym prostokącie.
     Złożoność: $\sO(\sqrt n + k)$, gdzie $k$ to liczba znalezionych punktów.
 \end{itemize}
-
-\newpage
 
 \subsection{Moduł \texttt{quick\_select}}
 Służy do zwracania mediany nieposortowanego zbioru punktów w czasie $\sO(n)$. Działanie jest identyczne z sortowaniem przez scalanie, dzieli zbiór na dwa zbiory względem zadanej wartości, aż odnajdzie medianę. Posiada trzy funkcje:
@@ -154,11 +151,8 @@ from quadtree_visualization import QuadtreeVis
 from geometry import Rectangle
 from numpy.random import seed, uniform
 
-seed(0)
-
 def generate_uniform_points(left, right, n):
     return list(zip(uniform(left, right, size=n), uniform(left, right, size=n)))
-
 
 points = generate_uniform_points(-10, 10, 25)
 rectangle = Rectangle(-3, 1, -7, 5)
@@ -168,18 +162,15 @@ quadtree.find(rectangle)
 quadtree.vis.show()
 \end{minted}
 
-\newpage
-Wykres wygenerowany przez ten program:
+Wykres wygenerowany przez ten program przedstawia poniższy rysunek.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{imgs/quadtree_vis.png}
+    \caption{Wizualizacja drzewa czwórkowego.}
 \end{figure}
 
-Aby wygenerować plik GIF do wyświetlania kolejnych kroków algorytmu, należy zamiast:
-\texttt{quadtree.vis.show()}, użyć \texttt{quadtree.vis.show\_gif()}.
-
-\newpage
+Aby wygenerować plik GIF do wyświetlania kolejnych kroków algorytmu, należy zamiast: \texttt{quadtree.vis.show()}, użyć \texttt{quadtree.vis.show\_gif()}.
 
 \subsection{Wizualizacja \texttt{KdTreeVis}}
 Klasa \texttt{KdTreeVis} działa identycznie jak klasa \texttt{KdTree}, ale dodatkowo dodaje elementy wizualizacji, zarówno podczas konstruowania drzewa, jak i odpowiadania na zapytanie.
@@ -191,11 +182,8 @@ from kd_tree_visualization import KdTreeVis
 from geometry import Rectangle
 from numpy.random import seed, uniform
 
-seed(0)
-
 def generate_uniform_points(left, right, n):
     return list(zip(uniform(left, right, size=n), uniform(left, right, size=n)))
-
 
 points = generate_uniform_points(-10, 10, 25)
 rectangle = Rectangle(-3, 1, -7, 5)
@@ -204,20 +192,92 @@ kd_tree.find(rectangle)
 kd_tree.vis.show()
 \end{minted}
 
+Wykres wygenerowany przez ten program przedstawia poniższy rysunek.
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{imgs/kd_tree_vis}
+    \caption{Wizualizacja kd-drzewa.}
 \end{figure}
 
 Aby wygenerować plik GIF do wyświetlania kolejnych kroków algorytmu, należy zamiast:
 \texttt{kd\_tree.vis.show()}, użyć \texttt{kd\_tree.vis.show\_gif()}.
 
 \section{Porównanie -- testy czasowe}
+Porównanie obu struktur danych przeprowadzono przy użyciu dwóch zbiorów testujących:
+\begin{itemize}
+    \item $\sA(n)$ -- zbiór $n$ punktów $P \in \sS = [-1000, 1000]^2$ wygenerowanych losowo za pomocą funkcji \texttt{numpy.random.uniform},
+    \item $\sB(n)$ -- zbiór $n$ punktów, z których połowa to zbiór $\sA(n/2)$, a reszta to translacja tego zbioru o wektor $[10^{-8}, 0]$.
+\end{itemize}
 
+Dla każdego zbioru wybrano po $5$ wartości $n$, dla których przeprowadzono testy. Każdy z testów polegał na wygenerowaniu $15$ zbiorów testujących i sprawdzenia czasu wykonywania:
+\begin{enumerate}
+    \item konstrukcji drzewa,
+    \item zapytania o mały prostokąt (losowy, mający powierzchnię równą $\frac{1}{100}$ powierzchni prostokąta $\sS$),
+    \item zapytania o duży prostokąt (losowy, mający powierzchnię równą $\frac{1}{4}$ powierzchni prostokąta $\sS$),
+\end{enumerate}
+dla każdej ze struktur. Średni czas dla każdej konfiguracji przedstawiono w tabelach \ref{tab:porównanie czasów A} i \ref{tab:porównanie czasów B} na końcu dokumentu.
+
+\subsection{Wyniki}
+
+Dla zbiorów typu $\sA$ drzewo czwórkowe okazało się wyraźnie lepsze. Szybciej można je skonstruować (rysunek \ref{fig:uniform construction time}), minimalnie szybciej również odpowiada na zapytania o duży prostokąt (rysunek \ref{fig:uniform find big time}). W zdecydowanie lepszym czasie odpowiada też na zapytania o mały prostokąt (rysunek \ref{fig:uniform find small time}).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.65\textwidth]{imgs/uniform_construction_time}
+    \caption{Porównanie czasu konstrukcji drzew dla zbioru $\sA$.}
+    \label{fig:uniform construction time}
+\end{figure}
+
+\begin{figure}[H]
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=\textwidth]{imgs/uniform_find_small_time}
+        \caption{zapytania o mały prostokąt}
+        \label{fig:uniform find small time}
+    \end{subfigure}
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=\textwidth]{imgs/uniform_find_big_time}
+        \caption{zapytania o duży prostokąt}
+        \label{fig:uniform find big time}
+    \end{subfigure}
+    \caption{Porównanie czasu zapytania dla zbioru $\sA$.}
+\end{figure}
+
+Zupełnie inaczej wygląda sytuacja w przypadku zbiorów typu $\sB$. Zarówno konstrukcja drzewa czwórkowego, jak i użycie go dla zapytań o duży prostokąt, jest zdecydowanie wolniejsze niż w przypadku kd-drzewa (rysunki \ref{fig:pairs construction time} i \ref{fig:pairs find big time}). Różnica jest na tyle duża, że testy przeprowadzono na danych o rząd wielkości mniejszych. W zapytaniach o mały prostokąt ponownie lepiej sprawdza się drzewo czwórkowe (rysunek \ref{fig:pairs find small time}).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.65\textwidth]{imgs/pairs_construction_time}
+    \caption{Porównanie czasu konstrukcji drzew dla zbioru $\sB$.}
+    \label{fig:pairs construction time}
+\end{figure}
+
+\begin{figure}[H]
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=\textwidth]{imgs/pairs_find_small_time}
+        \caption{zapytania o mały prostokąt}
+        \label{fig:pairs find small time}
+    \end{subfigure}
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=\textwidth]{imgs/pairs_find_big_time}
+        \caption{zapytania o duży prostokąt}
+        \label{fig:pairs find big time}
+    \end{subfigure}
+    \caption{Porównanie czasu zapytania dla zbioru $\sB$.}
+\end{figure}
+
+\subsection{Wnioski}
+Wyraźnie widać, że względne odległości między punktami mają ogromne znaczenie przy wyborze odpowiedniej struktury danych. W większości przypadków lepiej sprawdzi się drzewo czwórkowe, ale łatwo również znaleźć takie zbiory punktów, na których jego wydajność bardzo szybko spada.
+
+Lepiej sprawdzi się drzewo czwórkowe w sytuacjach, w których zwykle będziemy pytać o małe podzbiory zbioru punktów (na przykład w aplikacjach typu Google Maps), albo gdy możemy pominąć duże obszary tego zbioru (wykrywanie kolizji i kompresja obrazów).
+
+Kd-drzewo również ma swoje zalety; warto wymienić między innymi bardzo proste uogólnienie na większą liczbę wymiarów czy łatwiejsze wprowadzenie dodatkowych operacji (na przykład szukania najbliższego sąsiada dla danego puntu).
+
+\input{time_results.tex}
 
 \addcontentsline{toc}{section}{Literatura}
 \begin{thebibliography}{9}
-    \bibitem{ref:Głut} \textbf{Algorytmy geometryczne -- wykład}, dr inż Barbara Głut.
+    \bibitem{ref:Głut} \textbf{Algorytmy geometryczne -- wykład}, dr inż. Barbara Głut.
     \bibitem{ref:Buchin} \textbf{Quadtrees, Geometric Approximation Algorithms}, prof. Kevin Buchin, TU Dortmund.
         \url{https://ls11-www.cs.tu-dortmund.de/_media/buchin/teaching/akda_ws21/quadtrees.pdf}
         \bibitem{ref:Cormen} \textbf{Wprowadzenie do algorytmów}, Thomas H. Cormen et al.
