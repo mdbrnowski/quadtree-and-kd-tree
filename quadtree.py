@@ -41,13 +41,16 @@ class Quadtree(Tree):
             _Node(node.mid_x, node.max_x, node.min_y, node.mid_y)
         ]
 
-        # todo: check if it's not better to just append and iterate only once
-        children_points = [
-            list(filter(lambda p: p[0] > node.mid_x and p[1] >= node.mid_y, points)),
-            list(filter(lambda p: p[0] <= node.mid_x and p[1] > node.mid_y, points)),
-            list(filter(lambda p: p[0] < node.mid_x and p[1] <= node.mid_y, points)),
-            list(filter(lambda p: p[0] >= node.mid_x and p[1] < node.mid_y, points)),
-        ]
+        children_points = [[], [], [], []]
+        for p in points:
+            if p[0] >= node.mid_x and p[1] >= node.mid_y:
+                children_points[0].append(p)
+            elif p[0] < node.mid_x and p[1] >= node.mid_y:
+                children_points[1].append(p)
+            elif p[0] < node.mid_x and p[1] < node.mid_y:
+                children_points[2].append(p)
+            else:
+                children_points[3].append(p)
 
         node.children = children_nodes
         for child_node, child_points in zip(children_nodes, children_points):
