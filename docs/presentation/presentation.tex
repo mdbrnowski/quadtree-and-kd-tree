@@ -6,6 +6,7 @@
 \uselanguage{Polish}
 \languagepath{Polish}
 \newcommand{\sO}{\mathcal O}
+\usetikzlibrary{trees,overlay-beamer-styles,backgrounds}
 
 \title{Drzewa czwórkowe i kd-drzewa}
 \date{\today}
@@ -118,109 +119,45 @@ filter(lambda p: x_1 <= p[0] <= x_2 and y_1 <= p[1] <= y_2, points)
 \begin{frame}{kd-drzewa -- sposób podziału}
     \begin{columns}
         \column{0.5\textwidth}
-        \includegraphics[width=\textwidth]{images/plots/1}
+        \includegraphics<1>[width=\textwidth]{imgs/1}
+        \includegraphics<2>[width=\textwidth]{imgs/2}
+        \includegraphics<3>[width=\textwidth]{imgs/3}
+        \includegraphics<4-5>[width=\textwidth]{imgs/4}
+        \includegraphics<6-7>[width=\textwidth]{imgs/5}
+        \includegraphics<8>[width=\textwidth]{imgs/6}
+        \includegraphics<9-10>[width=\textwidth]{imgs/7}
+        \includegraphics<11-12>[width=\textwidth]{imgs/8}
         \column{0.5\textwidth}
-        \includegraphics[width=\textwidth]{images/trees/1.drawio}
-    \end{columns}
-\end{frame}
-
-\begin{frame}{kd-drzewa -- sposób podziału}
-    \begin{columns}
-        \column{0.5\textwidth}
-        \includegraphics[width=\textwidth]{images/plots/2}
-        \column{0.5\textwidth}
-        \includegraphics[width=\textwidth]{images/trees/2.drawio}
-    \end{columns}
-\end{frame}
-
-\begin{frame}{kd-drzewa -- sposób podziału}
-    \begin{columns}
-        \column{0.5\textwidth}
-        \includegraphics[width=\textwidth]{images/plots/3}
-        \column{0.5\textwidth}
-        \includegraphics[width=\textwidth]{images/trees/3.drawio}
-    \end{columns}
-\end{frame}
-
-\begin{frame}{kd-drzewa -- sposób podziału}
-    \begin{columns}
-        \column{0.5\textwidth}
-        \includegraphics[width=\textwidth]{images/plots/4}
-        \column{0.5\textwidth}
-        \includegraphics[width=\textwidth]{images/trees/4.drawio}
-    \end{columns}
-\end{frame}
-
-
-\begin{frame}{kd-drzewa -- sposób podziału}
-    \begin{columns}
-        \column{0.5\textwidth}
-        \includegraphics[width=\textwidth]{images/plots/4}
-        \column{0.5\textwidth}
-        \includegraphics[width=\textwidth]{images/trees/5.drawio}
-    \end{columns}
-\end{frame}
-
-\begin{frame}{kd-drzewa -- sposób podziału}
-    \begin{columns}
-        \column{0.5\textwidth}
-        \includegraphics[width=\textwidth]{images/plots/5}
-        \column{0.5\textwidth}
-        \includegraphics[width=\textwidth]{images/trees/6.drawio}
-    \end{columns}
-\end{frame}
-
-\begin{frame}{kd-drzewa -- sposób podziału}
-    \begin{columns}
-        \column{0.5\textwidth}
-        \includegraphics[width=\textwidth]{images/plots/5}
-        \column{0.5\textwidth}
-        \includegraphics[width=\textwidth]{images/trees/7.drawio}
-    \end{columns}
-\end{frame}
-
-\begin{frame}{kd-drzewa -- sposób podziału}
-    \begin{columns}
-        \column{0.5\textwidth}
-        \includegraphics[width=\textwidth]{images/plots/6}
-        \column{0.5\textwidth}
-        \includegraphics[width=\textwidth]{images/trees/8.drawio}
-    \end{columns}
-\end{frame}
-
-\begin{frame}{kd-drzewa -- sposób podziału}
-    \begin{columns}
-        \column{0.5\textwidth}
-        \includegraphics[width=\textwidth]{images/plots/7}
-        \column{0.5\textwidth}
-        \includegraphics[width=\textwidth]{images/trees/9.drawio}
-    \end{columns}
-\end{frame}
-
-\begin{frame}{kd-drzewa -- sposób podziału}
-    \begin{columns}
-        \column{0.5\textwidth}
-        \includegraphics[width=\textwidth]{images/plots/7}
-        \column{0.5\textwidth}
-        \includegraphics[width=\textwidth]{images/trees/10.drawio}
-    \end{columns}
-\end{frame}
-
-\begin{frame}{kd-drzewa -- sposób podziału}
-    \begin{columns}
-        \column{0.5\textwidth}
-        \includegraphics[width=\textwidth]{images/plots/8}
-        \column{0.5\textwidth}
-        \includegraphics[width=\textwidth]{images/trees/11.drawio}
-    \end{columns}
-\end{frame}
-
-\begin{frame}{kd-drzewa -- sposób podziału}
-    \begin{columns}
-        \column{0.5\textwidth}
-        \includegraphics[width=\textwidth]{images/plots/8}
-        \column{0.5\textwidth}
-        \includegraphics[width=\textwidth]{images/trees/12.drawio}
+        \onslide<2->{
+        \begin{tikzpicture}[scale=0.8,level distance=1.5cm,
+            level 1/.style={sibling distance=5cm},
+            level 2/.style={sibling distance=2.5cm},
+            level 3/.style={sibling distance=1.2cm}]
+            \tikzstyle{vertex}=[circle,fill=black!25,inner sep=0pt,scale=0.5,minimum size=1.6cm]
+            \tikzstyle{leaf}=[scale=0.5]
+            \node[vertex]{$x=-1$}
+                child[visible on=<3->]{node[vertex]{$y=-2$}
+                    child[visible on=<4->]{node[vertex]{$x=-4$}
+                        child[visible on=<5->]{node[leaf]{$(-4, -2)$}}
+                        child[visible on=<5->]{node[leaf]{$(-2, -4)$}}
+                    }
+                    child[visible on=<6->]{node[vertex]{$x=-2$}
+                        child[visible on=<7->]{node[leaf]{$(-3, 1)$}}
+                        child[visible on=<7->]{node[leaf]{$(-1, 3)$}}
+                    }
+                }
+                child[visible on=<8->]{node[vertex]{$y=-1$}
+                    child[visible on=<9->]{node[vertex]{$x=3$}
+                        child[visible on=<10->]{node[leaf]{$(3, -1)$}}
+                        child[visible on=<10->]{node[leaf]{$(4, -2)$}}
+                    }
+                    child[visible on=<11->]{node[vertex]{$x=0$}
+                        child[visible on=<12->]{node[leaf]{$(0, 0)$}}
+                        child[visible on=<12->]{node[leaf]{$(1, 2)$}}
+                    }
+                };
+        \end{tikzpicture}
+        }
     \end{columns}
 \end{frame}
 
@@ -237,9 +174,36 @@ filter(lambda p: x_1 <= p[0] <= x_2 and y_1 <= p[1] <= y_2, points)
 \begin{frame}{kd-drzewa -- odpowiadanie na zapytania}
     \begin{columns}
         \column{0.5\textwidth}
-        \includegraphics[width=\textwidth]{images/plots/9}
+        \includegraphics[width=\textwidth]{imgs/9}
         \column{0.5\textwidth}
-        \includegraphics[width=\textwidth]{images/trees/12.drawio}
+        \begin{tikzpicture}[scale=0.8,level distance=1.5cm,
+            level 1/.style={sibling distance=5cm},
+            level 2/.style={sibling distance=2.5cm},
+            level 3/.style={sibling distance=1.2cm}]
+            \tikzstyle{vertex}=[circle,fill=black!25,inner sep=0pt,scale=0.5,minimum size=1.6cm]
+            \tikzstyle{leaf}=[scale=0.5]
+            \node[vertex]{$x=-1$}
+                child{node[vertex]{$y=-2$}
+                    child{node[vertex]{$x=-4$}
+                        child{node[leaf]{$(-4, -2)$}}
+                        child{node[leaf]{$(-2, -4)$}}
+                    }
+                    child{node[vertex]{$x=-2$}
+                        child{node[leaf]{$(-3, 1)$}}
+                        child{node[leaf]{$(-1, 3)$}}
+                    }
+                }
+                child{node[vertex]{$y=-1$}
+                    child{node[vertex]{$x=3$}
+                        child{node[leaf]{$(3, -1)$}}
+                        child{node[leaf]{$(4, -2)$}}
+                    }
+                    child{node[vertex]{$x=0$}
+                        child{node[leaf]{$(0, 0)$}}
+                        child{node[leaf]{$(1, 2)$}}
+                    }
+                };
+        \end{tikzpicture}
     \end{columns}
 \end{frame}
 

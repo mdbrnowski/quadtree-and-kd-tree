@@ -80,16 +80,16 @@
     }
 
     \onslide<6->{
-        \foreach \pos/\name in {(-1.2,-6)/231, (-0.9,-6)/232, (-0.3,-6)/234} {
+        \foreach \pos/\name in {(-1.2,-5.5)/231, (-0.9,-5.5)/232, (-0.3,-5.5)/234} {
             \node[vertex4] (\name) at \pos {};
             \path[edge] (\name) -- (23);
         }
-        \path[edge] (-0.6,-6) -- (23);
-        \foreach \pos/\name in {(3.3,-6)/441, (3.6,-6)/442, (3.9,-6)/443, (4.2,-6)/444} {
+        \path[edge] (-0.6,-5.5) -- (23);
+        \foreach \pos/\name in {(3.3,-5.5)/441, (3.6,-5.5)/442, (3.9,-5.5)/443, (4.2,-5.5)/444} {
             \path[edge] \pos -- (44);
         }
-        \node[vertex4] (442) at (3.6,-6) {};
-        \node[vertex4] (443) at (3.9,-6) {};
+        \node[vertex4] (442) at (3.6,-5.5) {};
+        \node[vertex4] (443) at (3.9,-5.5) {};
     }
 \end{tikzpicture}
 
