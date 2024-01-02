@@ -1,12 +1,13 @@
 \documentclass[aspectratio=169,dvipsnames]{beamer}
 \usetheme{SimpleDarkBlue}
 \usepackage{tikz}
+\usetikzlibrary{trees,overlay-beamer-styles,backgrounds}
 \usepackage{minted}
+\usepackage{booktabs}
 \usepackage[polish]{babel}
 \uselanguage{Polish}
 \languagepath{Polish}
 \newcommand{\sO}{\mathcal O}
-\usetikzlibrary{trees,overlay-beamer-styles,backgrounds}
 
 \title{Drzewa czwórkowe i kd-drzewa}
 \date{\today}
@@ -105,7 +106,7 @@ filter(lambda p: x_1 <= p[0] <= x_2 and y_1 <= p[1] <= y_2, points)
 
 \section{Kd-drzewa}
 
-\begin{frame}{kd-tree -- opis struktury}
+\begin{frame}{kd-drzewo -- opis struktury}
     Kd-drzewo (ang. \textit{kd-tree}) to drzewo binarne, w którym:
     \begin{enumerate}
         \item<2-> każdy poziom drzewa odpowiada za wymiar, względem którego dzieli się punkty,
@@ -116,7 +117,7 @@ filter(lambda p: x_1 <= p[0] <= x_2 and y_1 <= p[1] <= y_2, points)
     \end{enumerate}
 \end{frame}
 
-\begin{frame}{kd-drzewa -- sposób podziału}
+\begin{frame}{kd-drzewo -- sposób podziału}
     \begin{columns}
         \column{0.5\textwidth}
         \includegraphics<1>[width=\textwidth]{imgs/1}
@@ -161,7 +162,7 @@ filter(lambda p: x_1 <= p[0] <= x_2 and y_1 <= p[1] <= y_2, points)
     \end{columns}
 \end{frame}
 
-\begin{frame}{kd-tree -- odpowiadanie na zapytania}
+\begin{frame}{kd-drzewo -- odpowiadanie na zapytania}
     Znajdowanie punktów, które należą do zadanego obszaru działa następująco:
     \begin{enumerate}
         \item<2-> każdy wierzchołek w drzewie (poza liśćmi) odpowiada za konkretny obszar w przestrzeni,
@@ -171,7 +172,7 @@ filter(lambda p: x_1 <= p[0] <= x_2 and y_1 <= p[1] <= y_2, points)
     \end{enumerate}
 \end{frame}
 
-\begin{frame}{kd-drzewa -- odpowiadanie na zapytania}
+\begin{frame}{kd-drzewo -- odpowiadanie na zapytania}
     \begin{columns}
         \column{0.5\textwidth}
         \includegraphics[width=\textwidth]{imgs/9}
@@ -208,7 +209,7 @@ filter(lambda p: x_1 <= p[0] <= x_2 and y_1 <= p[1] <= y_2, points)
 \end{frame}
 
 
-\begin{frame}{kd-tree -- analiza złożoności}
+\begin{frame}{kd-drzewo -- analiza złożoności}
     Budując drzewo, trzeba w każdym kroku liczyć medianę, co odbywa się w czasie $\sO(n)$.
     Drzewo jest zrównoważone, więc z każdym podziałem zbiór zmniejsza się dwukrotnie,
     więc ostateczna złożoność wynosi $\sO(n \log n)$.
@@ -221,11 +222,29 @@ filter(lambda p: x_1 <= p[0] <= x_2 and y_1 <= p[1] <= y_2, points)
     Złożoność
     \begin{enumerate}
         \item konstrukcji drzewa: $\sO(n\log n)$,
-        \item zapytania: $\sO(\sqrt n)$,
+        \item zapytania: $\sO(\sqrt n + k)$,
         \item pamięciowa: $\sO(n)$.
     \end{enumerate}
 \end{frame}
 
 \section{Porównanie}
+
+\begin{frame}{Porównanie}
+    \centering
+    \only<1,3,5>{
+        \begin{tabular}{lll}
+            \toprule
+            & quadtree & kd-tree \\
+            \midrule
+            konstrukcja & $\sO(n\log\beta) $ & $\sO(n\log n)$ \\
+            zapytania & $\sO(k\log\beta)$ & $\sO(\sqrt{n} + k)$ \\
+            pamięć & $\sO(n\log\beta)$ & $\sO(n)$ \\
+            \bottomrule
+        \end{tabular}
+    }
+    \includegraphics<2>[width=0.65\textwidth]{../documentation/imgs/uniform_construction_time}
+    \includegraphics<4>[width=0.65\textwidth]{../documentation/imgs/uniform_find_small_time}
+    \includegraphics<6>[width=0.65\textwidth]{../documentation/imgs/pairs_construction_time}
+\end{frame}
 
 \end{document}
