@@ -1,12 +1,13 @@
 \documentclass[aspectratio=169,dvipsnames]{beamer}
 \usetheme{SimpleDarkBlue}
 \usepackage{tikz}
+\usetikzlibrary{trees,overlay-beamer-styles,backgrounds}
 \usepackage{minted}
+\usepackage{booktabs}
 \usepackage[polish]{babel}
 \uselanguage{Polish}
 \languagepath{Polish}
 \newcommand{\sO}{\mathcal O}
-\usetikzlibrary{trees,overlay-beamer-styles,backgrounds}
 
 \title{Drzewa czwórkowe i kd-drzewa}
 \date{\today}
@@ -52,7 +53,7 @@
     \end{columns}
 \end{frame}
 
-\section{Rozwiązanie trywialne}
+\section*{Rozwiązanie trywialne}
 
 \begin{frame}[fragile]{Rozwiązanie trywialne}
     Sprawdzić każdy punkt. Złożoność czasowa zapytania: $\sO(n)$.
@@ -82,6 +83,15 @@ filter(lambda p: x_1 <= p[0] <= x_2 and y_1 <= p[1] <= y_2, points)
     \input{quadtree_construction.tex}
 \end{frame}
 
+\begin{frame}{Drzewa czwórkowe -- odpowiadanie na zapytania}
+    Znajdowanie punktów, które należą do zadanego obszaru działa następująco:
+    \begin{enumerate}
+        \item<1-> przeszukujemy drzewo w dowolny sposób (DFS, BFS, ...), dla każdego niebędącego liściem wierzchołka sprawdzając, czy odpowiadający mu prostokąt ma część wspólną z szukanym prostokątem,
+        \item<2-> jeśli tak, to schodzimy wgłąb tego poddrzewa,
+        \item<3-> gdy dojdziemy do liścia, sprawdzamy, czy odpowiadający mu punkt należy do szukanego prostokąta.
+    \end{enumerate}
+\end{frame}
+
 \begin{frame}{Drzewa czwórkowe -- analiza złożoności}
     \begin{lemma}[wysokość drzewa czwórkowego]
         Niech
@@ -89,9 +99,7 @@ filter(lambda p: x_1 <= p[0] <= x_2 and y_1 <= p[1] <= y_2, points)
         Wysokość $h$ drzewa czwórkowego dla zbioru $P$ jest $\Theta(\log\beta)$.
     \end{lemma}
 
-    \pause Warto zauważyć, że $h$ może być nieograniczone przez $n$. W praktyce jest ograniczone dzięki standardowi liczb zmiennoprzecinkowych.
-
-    Łatwo pokazać, że $h$ jest $\Omega(\log n)$ (a jeśli punkty w $P$ są rozłożone równomiernie, to $\Theta(\log n)$).
+    \pause Warto zauważyć, że $h$ nie jest ograniczone od góry przez funkcję $n$. Łatwo pokazać, że $h$ jest $\Omega(\log n)$ (a jeśli punkty w $P$ są rozłożone równomiernie, to $\Theta(\log n)$).
 
     \onslide<3->{
         Złożoność
@@ -105,7 +113,7 @@ filter(lambda p: x_1 <= p[0] <= x_2 and y_1 <= p[1] <= y_2, points)
 
 \section{Kd-drzewa}
 
-\begin{frame}{kd-tree -- opis struktury}
+\begin{frame}{kd-drzewo -- opis struktury}
     Kd-drzewo (ang. \textit{kd-tree}) to drzewo binarne, w którym:
     \begin{enumerate}
         \item<2-> każdy poziom drzewa odpowiada za wymiar, względem którego dzieli się punkty,
@@ -116,7 +124,7 @@ filter(lambda p: x_1 <= p[0] <= x_2 and y_1 <= p[1] <= y_2, points)
     \end{enumerate}
 \end{frame}
 
-\begin{frame}{kd-drzewa -- sposób podziału}
+\begin{frame}{kd-drzewo -- sposób podziału}
     \begin{columns}
         \column{0.5\textwidth}
         \includegraphics<1>[width=\textwidth]{imgs/1}
@@ -161,7 +169,7 @@ filter(lambda p: x_1 <= p[0] <= x_2 and y_1 <= p[1] <= y_2, points)
     \end{columns}
 \end{frame}
 
-\begin{frame}{kd-tree -- odpowiadanie na zapytania}
+\begin{frame}{kd-drzewo -- odpowiadanie na zapytania}
     Znajdowanie punktów, które należą do zadanego obszaru działa następująco:
     \begin{enumerate}
         \item<2-> każdy wierzchołek w drzewie (poza liśćmi) odpowiada za konkretny obszar w przestrzeni,
@@ -171,7 +179,7 @@ filter(lambda p: x_1 <= p[0] <= x_2 and y_1 <= p[1] <= y_2, points)
     \end{enumerate}
 \end{frame}
 
-\begin{frame}{kd-drzewa -- odpowiadanie na zapytania}
+\begin{frame}{kd-drzewo -- odpowiadanie na zapytania}
     \begin{columns}
         \column{0.5\textwidth}
         \includegraphics[width=\textwidth]{imgs/9}
@@ -208,7 +216,7 @@ filter(lambda p: x_1 <= p[0] <= x_2 and y_1 <= p[1] <= y_2, points)
 \end{frame}
 
 
-\begin{frame}{kd-tree -- analiza złożoności}
+\begin{frame}{kd-drzewo -- analiza złożoności}
     Budując drzewo, trzeba w każdym kroku liczyć medianę, co odbywa się w czasie $\sO(n)$.
     Drzewo jest zrównoważone, więc z każdym podziałem zbiór zmniejsza się dwukrotnie,
     więc ostateczna złożoność wynosi $\sO(n \log n)$.
@@ -221,11 +229,41 @@ filter(lambda p: x_1 <= p[0] <= x_2 and y_1 <= p[1] <= y_2, points)
     Złożoność
     \begin{enumerate}
         \item konstrukcji drzewa: $\sO(n\log n)$,
-        \item zapytania: $\sO(\sqrt n)$,
+        \item zapytania: $\sO(\sqrt n + k)$,
         \item pamięciowa: $\sO(n)$.
     \end{enumerate}
 \end{frame}
 
 \section{Porównanie}
+
+\begin{frame}{Porównanie}
+    \centering
+    \only<1,3,5>{
+        \begin{tabular}{lll}
+            \toprule
+            & quadtree & kd-tree \\
+            \midrule
+            konstrukcja & $\sO(n\log\beta) $ & $\sO(n\log n)$ \\
+            zapytania & $\sO(k\log\beta)$ & $\sO(\sqrt{n} + k)$ \\
+            pamięć & $\sO(n\log\beta)$ & $\sO(n)$ \\
+            \bottomrule
+        \end{tabular}
+    }
+    \includegraphics<2>[width=0.65\textwidth]{../documentation/imgs/uniform_construction_time}
+    \includegraphics<4>[width=0.65\textwidth]{../documentation/imgs/uniform_find_small_time}
+    \includegraphics<6>[width=0.65\textwidth]{../documentation/imgs/pairs_construction_time}
+\end{frame}
+
+\section*{Bibliografia}
+
+\begin{frame}{Bibliografia}
+    \begin{thebibliography}{9}
+        \setbeamertemplate{bibliography item}[text]
+        \bibitem{ref:Głut} \textbf{Algorytmy geometryczne -- wykład}, dr inż. Barbara Głut.
+        \bibitem{ref:Buchin} \textbf{Quadtrees, Geometric Approximation Algorithms}, prof. Kevin Buchin, TU Dortmund.
+            \url{https://ls11-www.cs.tu-dortmund.de/_media/buchin/teaching/akda_ws21/quadtrees.pdf}
+        \bibitem{ref:Cormen} \textbf{Wprowadzenie do algorytmów}, Thomas H. Cormen et al.
+    \end{thebibliography}
+\end{frame}
 
 \end{document}
